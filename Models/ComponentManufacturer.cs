@@ -17,4 +17,6 @@ public class ComponentManufacturer
     
     [Column(TypeName = "date")]
     public DateOnly FoundationDate { get; set; }
+    
+    public ICollection<Component> Components { get; set; } = new List<Component>();
 }

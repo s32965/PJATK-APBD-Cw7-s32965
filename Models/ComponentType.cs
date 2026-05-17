@@ -14,4 +14,6 @@ public class ComponentType
     
     [MaxLength(150)]
     public string Name { get; set; }
+    
+    public ICollection<Component> Components { get; set; } = new List<Component>();
 }

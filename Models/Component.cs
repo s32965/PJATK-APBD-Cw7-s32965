@@ -25,5 +25,6 @@ public class Component
 
     [ForeignKey(nameof(ComponentTypesId))] 
     public ComponentType ComponentType { get; set; } = null!;
-
+    
+    public ICollection<PCComponent> PCComponents { get; set; } = new List<PCComponent>();
 }

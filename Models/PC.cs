@@ -22,4 +22,5 @@ public class PC
     
     public int Stock { get; set; }
     
+    public ICollection<PCComponent> PCComponents { get; set; } = new List<PCComponent>();
 }
