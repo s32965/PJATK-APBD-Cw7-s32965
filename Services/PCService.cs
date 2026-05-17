@@ -88,4 +88,22 @@ public class PCService(DatabaseContext ctx) : IPCService
         
         return new PCListResponse(pc.Id, pc.Name, pc.Weight, pc.Warranty, pc.CreatedAt, pc.Stock);
     }
+
+    public async Task UpdateAsync(int id, UpdatePCRequest request, CancellationToken cancellationToken)
+    {
+        int affectedRows = await ctx.PCs
+            .Where(pc => pc.Id == id)
+            .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(e => e.Name, request.Name)
+                    .SetProperty(e => e.Weight, request.Weight)
+                    .SetProperty(e => e.Warranty, request.Warranty)
+                    .SetProperty(e => e.Stock, request.Stock),
+                cancellationToken
+            );
+
+        if (affectedRows == 0)
+        {
+            throw new NotFoundException($"Student with id {id} not found");
+        }
+    }
 }
