@@ -103,7 +103,19 @@ public class PCService(DatabaseContext ctx) : IPCService
 
         if (affectedRows == 0)
         {
-            throw new NotFoundException($"Student with id {id} not found");
+            throw new NotFoundException($"PC with id {id} not found");
+        }
+    }
+
+    public async Task DeleteAsync(int id, CancellationToken cancellationToken)
+    {
+        int affectedRows = await ctx.PCs
+            .Where(e => e.Id == id)
+            .ExecuteDeleteAsync(cancellationToken);
+        
+        if (affectedRows == 0)
+        {
+            throw new NotFoundException($"PC with id {id} not found");
         }
     }
 }
