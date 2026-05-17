@@ -1,3 +1,4 @@
+using Cw7.DTOs;
 using Cw7.Services;
 using Cw7.Excepetions;
 using Microsoft.AspNetCore.Mvc;
@@ -25,5 +26,25 @@ public class PcsController(IPCService service) : ControllerBase
         {
             return NotFound(e.Message);
         }
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return Ok(await service.GetByIdAsync(id, cancellationToken));
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddPC([FromBody] CreatePCRequest request, CancellationToken cancellationToken)
+    {
+        var pc = await service.AddAsync(request, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id = pc.Id }, pc);
     }
 }

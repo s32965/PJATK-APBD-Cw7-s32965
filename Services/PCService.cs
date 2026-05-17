@@ -58,4 +58,34 @@ public class PCService(DatabaseContext ctx) : IPCService
                    )).FirstOrDefaultAsync(cancellationToken) 
                ?? throw new NotFoundException($"PC with id: {id} not found");
     }
+
+    public async Task<PCListResponse> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return await ctx.PCs.Select(pc => new PCListResponse(
+                   pc.Id,
+                   pc.Name,
+                   pc.Weight,
+                   pc.Warranty,
+                   pc.CreatedAt,
+                   pc.Stock
+                   )).FirstOrDefaultAsync(cancellationToken) 
+            ?? throw new NotFoundException($"PC with id: {id} not found");
+    }
+
+    public async Task<PCListResponse> AddAsync(CreatePCRequest request, CancellationToken cancellationToken)
+    {
+        var pc = new PC
+        {
+            Name = request.Name,
+            Weight = request.Weight,
+            Warranty = request.Warranty,
+            CreatedAt = request.CreatedAt,
+            Stock = request.Stock
+        };
+
+        ctx.Add(pc);
+        await ctx.SaveChangesAsync(cancellationToken);
+        
+        return new PCListResponse(pc.Id, pc.Name, pc.Weight, pc.Warranty, pc.CreatedAt, pc.Stock);
+    }
 }
